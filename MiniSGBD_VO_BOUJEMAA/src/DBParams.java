@@ -1,5 +1,8 @@
 
 public class DBParams {
-     public static dBPath;
-     public static double pageSize;
+
+	public static String DBPath;
+	public static int pageSize = 4096;
+	public static int frameCount;
+	
 }

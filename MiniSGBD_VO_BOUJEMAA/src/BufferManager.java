@@ -1,17 +1,11 @@
 
 public class BufferManager {
+	private static BufferManager buffermanager;
 	
+	public static BufferManager getInstance() {
+		if(buffermanager == null)
+			buffermanager = new BufferManager(); 
+		return buffermanager;
+	}
 	
-	 public buff getPage(int pageId) {
-		 
-	 }
-	 
-	 public void freePage(int pageId, int valdirty) {
-		 
-	 }
-	 
-	 public void flushAll() {
-		 
-	 }
-
 }

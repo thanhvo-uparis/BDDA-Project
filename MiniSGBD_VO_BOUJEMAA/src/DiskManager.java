@@ -1,43 +1,82 @@
+
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
 
 public class DiskManager {
-       
 	
-	/**fileIdx un entier correspondant à un identifiant/ indice de ficher.
-	 * 
-	 * @param fileIdx
-	 */
-	  public void createFile(int fileIdx) {
-		  
-	  }
-
-	  
-	  /**
-	   * 
-	   * @param fileIdx
-	   * @return
-	   */
-	  public PageId addpage(int fileIdx) {
-		  File file= new File("D:\\Projet_BDDA_VO_BOUJEMAA\\BD\\Data_"+fileIdx);
-		  
-		  if(file.exists()) {
-			  double octets = file.length();
-			  System.out.println("La taille du fichier est: "+octets);
-			  
-			  int compteur = (int)octets/4096;
-			  }
-		  
-	  }
-	  
-	  /**
-	   * 
-	   * @param pageId
-	   */
-	  public void readPage(int pageId, ) {
-		  
-	  }
-	  
-	  public void writePage() {
-		  
-	  }
+	void CreateFile (int fileIdx ) {
+		RandomAccessFile file;
+		try {
+			file = new RandomAccessFile(DBParams.DBPath + "Data_"+fileIdx+".rf","rw");
+			
+		  } catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		  }
+	}
+	 
+	
+	int AddPage(int fileIdx)
+	{
+		RandomAccessFile file; 
+		try {	
+			file = new RandomAccessFile(DBParams.DBPath + "Data_"+fileIdx+".rf","rw");
+			long len = file.length();
+			file.seek(len);
+			file.write(new byte[DBParams.pageSize]); 
+			len = file.length();
+			return (int) (len/DBParams.pageSize);
+		  } catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		  }catch (IOException e) { 
+			e.printStackTrace();
+		  }
+		
+		return 0;
+		
+	}
+	
+	byte[] ReadPage(String pageId, byte[] buff)
+	{
+		String div[] = pageId.split(",");
+		String fileIdx = div[0];
+		int pageid = Integer.valueOf(div[1]);
+		RandomAccessFile file;
+		try {
+			file = new RandomAccessFile(DBParams.DBPath + "Data_"+fileIdx+".rf","r");
+			buff = new byte[(int) DBParams.pageSize];
+			pageid *= DBParams.pageSize; 
+			file.read(buff, pageid, DBParams.pageSize);
+			return buff;
+		  } catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		  }catch (IOException e) { 
+			e.printStackTrace();
+		  }
+		return null;
+		
+	}
+	
+	void WritePage(String pageid, byte[] buff)
+	{
+		String div[] = pageid.split(",");
+		String fileIdx = div[0];
+		int pageId = Integer.valueOf(div[1]);
+		
+		RandomAccessFile file;
+		try {
+			file = new RandomAccessFile(DBParams.DBPath + "Data_"+fileIdx+".rf","rw");
+			pageId *= DBParams.pageSize; 
+			file.write(buff, pageId, DBParams.pageSize);
+		  } catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		  }catch (IOException e) { 
+			e.printStackTrace();
+		  }
+		
+	}
 }
